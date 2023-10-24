@@ -196,6 +196,13 @@ bulk.combined <- FindClusters(bulk.combined, resolution = 0.6)
 DimPlot(bulk.combined, reduction = "umap" , label = TRUE, label.size = 6) 
 DimPlot(bulk.combined, reduction = "umap",split.by = "orig.ident", label = TRUE, repel = TRUE,ncol = 3) +NoLegend()
 
+# Cluster labeling
 new.cluster.ids <- c("C4-GZMK","C5-HLA-DRA","C1-LEF1","C3-IL7R","C2-RPL13","C6-PDCD1","C8-KLRC2","C10-S100A9","C7-IFNG","C1-LEF1","C11-HSPA1B","C12-IFIT2","C9-MKI67","C13-JUNB")
+names(new.cluster.ids) <- levels(bulk.combined)
+bulk.combined_label <- RenameIdents(bulk.combined , new.cluster.ids)
+
+# <Save the object at this point so that it can easily be loaded back>
+saveRDS(bulk.combined, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined.rds")
+saveRDS(bulk.combined_label, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
 
 
