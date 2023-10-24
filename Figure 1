@@ -18,9 +18,9 @@ library(scRNAseq)
 rm(list = ls())  
 
 # load data
-MPE.combined_label <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label.rds")
-MPE.combined_label2 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
-seurat0.8 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_seurat0.8.rds")
+MPE.combined_label <- readRDS("G:/SingleCell/singlecellfile/MPE_MPE.combined_label.rds")
+MPE.combined_label2 <- readRDS("G:/SingleCell/singlecellfile/MPE_MPE.combined_label2.rds")
+seurat0.8 <- readRDS("G:/SingleCell/singlecellfile/MPE_seurat0.8.rds")
 
 # Figure 1B
 DimPlot(MPE.combined_label, reduction = "umap" , label = TRUE, pt.size = 1.8, label.size = 5,repel = TRUE,
