@@ -1,0 +1,18 @@
+library(Seurat) 
+library(SeuratObject)
+library(scales)
+library(dplyr) 
+library(data.table) 
+library(readr) 
+library(ggplot2) 
+library(tidyverse)
+suppressMessages(library(scRepertoire))
+library(fgsea)
+library(EnhancedVolcano)
+library(clusterProfiler)
+library(msigdbr)
+library(goseq)
+library(geneLenDataBase)
+library(org.Hs.eg.db)
+
+# Data road
