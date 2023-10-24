@@ -1,0 +1,212 @@
+library(Seurat)
+library(drc)
+
+#Figure 2B
+##ex1
+ex1_EC50 <- read.csv("ex1_EC50.csv",header=T, fileEncoding="UTF-8-BOM")
+
+head(ex1_EC50)
+plot(wild ~ concentration, ex1_EC50)
+plot(mut ~ concentration, ex1_EC50)
+plot(wild ~ concentration, ex1_EC50, subset=concentration!=0, log="x")
+plot(mut ~ concentration, ex1_EC50, subset=concentration!=0, log="x")
+model.LL4 <- drm(wild ~ concentration, data = ex1_EC50, fct=LL.4())
+model.LL5 <- drm(mut ~ concentration, data = ex1_EC50, fct=LL.4())
+summary(model.LL4)
+summary(model.LL5)
+coef(model.LL4)
+coef(model.LL5)
+modelFit(model.LL4)
+modelFit(model.LL5)
+
+ED50_mCR1 <- ED(model.LL4, 50)
+ED50_mCR2 <- ED(model.LL5, 50)
+EC50_mCR1 <- ED50_mCR1[1]
+EC50_mCR2 <- ED50_mCR2[1]
+SE_EC50_mCR1 <- ED50_mCR1[2]
+SE_EC50_mCR2 <- ED50_mCR2[2]
+
+plot(c(model.LL4,model.LL5))
+plot(model.LL4, type="bars", col = "magenta", lwd=4)
+plot(model.LL4, type="all")
+
+# Draw a regression curve
+plot(mut ~ concentration, ex1_EC50, col = "magenta", add = TRUE)
+plot(wild ~ concentration, ex1_EC50, col = "lightgrey", add = TRUE)
+
+plot(mut ~ concentration, ex1_EC50,
+     ylim = c(xmin=0, xmax=35),
+     xlab = "Peptide concentration [Log10 (ng/mL)]",
+     ylab = "RLU [x10^4]", lwd = 4,cex.main=3,cex.lab=1.6,	cex.axis=1.6)
+plot(wild ~ concentration,
+     ylim = c(xmin=0, xmax=35),
+     ex1_EC50, add = TRUE)
+
+# Overlay regression curves on scatter plots
+curve(predict(model.LL5, data.frame(concentration=x)), add=TRUE, 
+      col = "magenta", lwd=4)
+curve(predict(model.LL4, data.frame(concentration=x)), add=TRUE, 
+      col = "lightgrey", lwd=4)
+
+##ex7
+ex7_EC50 <- read.csv("ex7_EC50.csv",header=T, fileEncoding="UTF-8-BOM")
+
+head(ex1_EC50)
+plot(wild ~ concentration, ex7_EC50)
+plot(mut ~ concentration, ex7_EC50)
+plot(wild ~ concentration, ex7_EC50, subset=concentration!=0, log="x")
+plot(mut ~ concentration, ex7_EC50, subset=concentration!=0, log="x")
+model.LL4 <- drm(wild ~ concentration, data = ex7_EC50, fct=LL.4())
+model.LL5 <- drm(mut ~ concentration, data = ex7_EC50, fct=LL.4())
+summary(model.LL4)
+summary(model.LL5)
+coef(model.LL4)
+coef(model.LL5)
+modelFit(model.LL4)
+modelFit(model.LL5)
+
+ED50_mCR1 <- ED(model.LL4, 50)
+ED50_mCR2 <- ED(model.LL5, 50)
+EC50_mCR1 <- ED50_mCR1[1]
+EC50_mCR2 <- ED50_mCR2[1]
+SE_EC50_mCR1 <- ED50_mCR1[2]
+SE_EC50_mCR2 <- ED50_mCR2[2]
+
+plot(c(model.LL4,model.LL5))
+plot(model.LL4, type="bars", col = "blue", lwd=4)
+plot(model.LL4, type="all")
+
+# Draw a regression curve
+plot(mut ~ concentration, ex7_EC50, col = "blue", add = TRUE)
+plot(wild ~ concentration, ex7_EC50, col = "lightgrey", add = TRUE)
+
+plot(mut ~ concentration, ex7_EC50,
+     ylim = c(xmin=0, xmax=35),
+     xlab = "Peptide concentration [Log10 (ng/mL)]",
+     ylab = "RLU [x10^4]", lwd = 4,cex.main=3,cex.lab=1.6,	cex.axis=1.6)
+plot(wild ~ concentration,
+     ylim = c(xmin=0, xmax=35),
+     ex7_EC50, add = TRUE)
+
+# Overlay regression curves on scatter plots
+curve(predict(model.LL5, data.frame(concentration=x)), add=TRUE, 
+      col = "magenta", lwd=4)
+curve(predict(model.LL4, data.frame(concentration=x)), add=TRUE, 
+      col = "lightgrey", lwd=4)
+
+##ex12
+ex12_EC50 <- read.csv("ex12_EC50.csv",header=T, fileEncoding="UTF-8-BOM")
+
+head(ex1_EC50)
+plot(wild ~ concentration, ex12_EC50)
+plot(mut ~ concentration, ex12_EC50)
+plot(wild ~ concentration, ex12_EC50, subset=concentration!=0, log="x")
+plot(mut ~ concentration, ex12_EC50, subset=concentration!=0, log="x")
+model.LL4 <- drm(wild ~ concentration, data = ex12_EC50, fct=LL.4())
+model.LL5 <- drm(mut ~ concentration, data = ex12_EC50, fct=LL.4())
+summary(model.LL4)
+summary(model.LL5)
+coef(model.LL4)
+coef(model.LL5)
+modelFit(model.LL4)
+modelFit(model.LL5)
+
+ED50_mCR1 <- ED(model.LL4, 50)
+ED50_mCR2 <- ED(model.LL5, 50)
+EC50_mCR1 <- ED50_mCR1[1]
+EC50_mCR2 <- ED50_mCR2[1]
+SE_EC50_mCR1 <- ED50_mCR1[2]
+SE_EC50_mCR2 <- ED50_mCR2[2]
+
+plot(c(model.LL4,model.LL5))
+plot(model.LL4, type="bars", col = "skyblue", lwd=4)
+plot(model.LL4, type="all")
+
+# Draw a regression curve
+plot(mut ~ concentration, ex12_EC50, col = "skyblue", add = TRUE)
+plot(wild ~ concentration, ex12_EC50, col = "lightgrey", add = TRUE)
+
+plot(mut ~ concentration, ex12_EC50,
+     ylim = c(xmin=0, xmax=35),
+     xlab = "Peptide concentration [Log10 (ng/mL)]",
+     ylab = "RLU [x10^4]", lwd = 4,cex.main=3,cex.lab=1.6,	cex.axis=1.6)
+plot(wild ~ concentration,
+     ylim = c(xmin=0, xmax=35),
+     ex12_EC50, add = TRUE)
+
+# Overlay regression curves on scatter plots
+curve(predict(model.LL5, data.frame(concentration=x)), add=TRUE, 
+      col = "magenta", lwd=4)
+curve(predict(model.LL4, data.frame(concentration=x)), add=TRUE, 
+      col = "lightgrey", lwd=4)
+
+##ex17
+ex17_EC50 <- read.csv("ex17_EC50.csv",header=T, fileEncoding="UTF-8-BOM")
+
+head(ex1_EC50)
+plot(wild ~ concentration, ex17_EC50)
+plot(mut ~ concentration, ex17_EC50)
+plot(wild ~ concentration, ex17_EC50, subset=concentration!=0, log="x")
+plot(mut ~ concentration, ex17_EC50, subset=concentration!=0, log="x")
+model.LL4 <- drm(wild ~ concentration, data = ex17_EC50, fct=LL.4())
+model.LL5 <- drm(mut ~ concentration, data = ex17_EC50, fct=LL.4())
+summary(model.LL4)
+summary(model.LL5)
+coef(model.LL4)
+coef(model.LL5)
+modelFit(model.LL4)
+modelFit(model.LL5)
+
+ED50_mCR1 <- ED(model.LL4, 50)
+ED50_mCR2 <- ED(model.LL5, 50)
+EC50_mCR1 <- ED50_mCR1[1]
+EC50_mCR2 <- ED50_mCR2[1]
+SE_EC50_mCR1 <- ED50_mCR1[2]
+SE_EC50_mCR2 <- ED50_mCR2[2]
+
+plot(c(model.LL4,model.LL5))
+plot(model.LL4, type="bars", col = "skyblue", lwd=4)
+plot(model.LL4, type="all")
+
+# Draw a regression curve
+plot(mut ~ concentration, ex17_EC50, col = "black", add = TRUE)
+plot(wild ~ concentration, ex17_EC50, col = "lightgrey", add = TRUE)
+
+plot(mut ~ concentration, ex17_EC50,
+     ylim = c(xmin=0, xmax=35),
+     xlab = "Peptide concentration [Log10 (ng/mL)]",
+     ylab = "RLU [x10^4]", lwd = 4,cex.main=3,cex.lab=1.6,	cex.axis=1.6)
+plot(wild ~ concentration,
+     ylim = c(xmin=0, xmax=35),
+     ex17_EC50, add = TRUE)
+
+# Overlay regression curves on scatter plots
+curve(predict(model.LL5, data.frame(concentration=x)), add=TRUE, 
+      col = "magenta", lwd=4)
+curve(predict(model.LL4, data.frame(concentration=x)), add=TRUE, 
+      col = "lightgrey", lwd=4)
+
+# Figure 2C
+MPE_mean <- read.csv("ELISA0814_2.csv")
+MPE_mean <- read.csv("ELISA0814noIFN.csv")
+
+nomean <- mean(MPE_mean[,1])
+ex1mean <- mean(MPE_mean[,2])
+ex7mean <- mean(MPE_mean[,3])
+ex12mean <- mean(MPE_mean[,4])
+ex17mean <- mean(MPE_mean[,5])
+
+mv <- c(nomean,ex1mean,ex7mean,ex12mean,ex17mean)
+
+barplot(mv)
+b <- barplot(mv,names.arg=c("no_transfect","ex1","ex7","ex12","ex17"),cex.main=3,cex.lab=1.6,	cex.axis=1.6,cex.names=1.6, col = c("#6495ED","magenta","blue","skyblue","black"), ylim = c(0, max(80)))
+
+nsd <- sd(MPE_mean[,1])
+ex1sd <- sd(MPE_mean[,2])
+ex7sd <- sd(MPE_mean[,3])
+ex12sd <- sd(MPE_mean[,4])
+ex17sd <- sd(MPE_mean[,5])
+
+sd <- c(nsd,ex1sd,ex7sd,ex12sd,ex17sd)
+
+arrows(b, mv - sd, b, mv + sd, code = 3, lwd = 1, angle = 90, length = 0.1)
