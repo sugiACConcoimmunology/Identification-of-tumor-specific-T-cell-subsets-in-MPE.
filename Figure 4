@@ -1,2 +1,12 @@
+library(Seurat) 
+library(dplyr) 
+library(data.table) 
+library(readr) 
+library(tidyr) 
+library(ggplot2) 
+library(tidyverse)
+suppressMessages(library(scRepertoire))
+library(SeuratData)
+
 
 bulk.combined_label <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
