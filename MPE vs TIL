@@ -201,6 +201,33 @@ new.cluster.ids <- c("C4-GZMK","C5-HLA-DRA","C1-LEF1","C3-IL7R","C2-RPL13","C6-P
 names(new.cluster.ids) <- levels(bulk.combined)
 bulk.combined_label <- RenameIdents(bulk.combined , new.cluster.ids)
 
+# Make new column
+example_meta_by_sample <- tibble::tribble(
+  ~orig.ident,  ~sample_name,
+  "KOM002", "MPE",
+  "LK208", "MPE", 
+  "LK084", "TILs",
+  "Ichi010", "TILs",
+  "Mchu003", "TILs",
+  "LK006", "MPE"
+)
+table(example_meta_by_sample)
+ ## Change orig.ident column to factor so that it can be joined later
+example_meta_by_sample$orig.ident <- as.factor(example_meta_by_sample$orig.ident)
+
+ ## Pull existing meta data where samples are specified by orig.ident and remove everything but orig.ident
+OBJ_meta <- bulk.combined_label@meta.data %>% 
+  dplyr::select(orig.ident) %>% 
+  rownames_to_column("barcodes")
+table(OBJ_meta)
+
+ ## Use full join with object meta data in x position so that by sample meta dataframe is propagated across the by cell meta dataframe from the object.  And then remove orig.ident because it's already present in object meta data.
+full_new_meta <- full_join(x = OBJ_meta, y = example_meta_by_sample) %>% 
+  column_to_rownames("barcodes") %>% 
+  dplyr::select(-orig.ident)
+
+bulk.combined_label <- AddMetaData(object = bulk.combined_label, metadata = full_new_meta)
+
 # <Save the object at this point so that it can easily be loaded back>
 saveRDS(bulk.combined, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined.rds")
 saveRDS(bulk.combined_label, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
