@@ -13,3 +13,4 @@ rm(list = ls())
 
 # load data
 bulk.combined_label <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
+seurat_bulk <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_seurat_bulk.rds")
