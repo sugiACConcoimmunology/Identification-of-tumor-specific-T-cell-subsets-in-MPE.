@@ -1,6 +1,7 @@
 library(Seurat) 
 library(SeuratObject)
 library(scales)
+library(tidyr)
 library(dplyr) 
 library(data.table) 
 library(readr) 
@@ -19,3 +20,199 @@ library(org.Hs.eg.db)
 rm(list = ls())  
 
 # load data
+MPE.combined_label2 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
+seurat0.8 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_seurat0.8.rds")
+
+# Figure 3A
+Idents(seurat0.8) <- "orig.ident"
+seurat0.8 <- subset(x = seurat0.8, idents =  'KOM002')
+
+color_MPE <- c("CAVQGGNNARLMF_CASSYGGRGQTEAFF"="magenta","NA_CASSYGGRGQTEAFF"="magenta","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF"="blue","NA_CASSSSGTIYEQYF"="blue",
+               "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF"="black","CAVRRDYKLSF_CATSDPAPSGPTDTQYF"="green","CAEILGGYQKVTF_CASSAEGQASSYNEQFF"="skyblue","NA_CASSAEGQASSYNEQFF"="skyblue")
+seurat0.8 <- highlightClonotypes(seurat0.8, 
+                                 cloneCall= "aa", 
+                                 sequence = c("CAVQGGNNARLMF_CASSYGGRGQTEAFF","NA_CASSYGGRGQTEAFF","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF","NA_CASSSSGTIYEQYF",
+                                              "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF","CAVRRDYKLSF_CATSDPAPSGPTDTQYF","CAEILGGYQKVTF_CASSAEGQASSYNEQFF","NA_CASSAEGQASSYNEQFF"))
+
+DimPlot(seurat0.8, group.by = "highlight",cols = color_MPE, pt.size = 4,na.value="lightgrey", order = TRUE)  +
+  scale_colour_manual(values = color_MPE,na.value="lightgrey",
+                      labels = c("CAVQGGNNARLMF_CASSYGGRGQTEAFF"="ex1","NA_CASSYGGRGQTEAFF"="ex1","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF"="ex7","NA_CASSSSGTIYEQYF"="ex7",
+                                                 "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF"="ex17","CAEILGGYQKVTF_CASSAEGQASSYNEQFF"="ex12","NA_CASSAEGQASSYNEQFF"="ex12","CAVRRDYKLSF_CATSDPAPSGPTDTQYF"="ex321"))
+
+# Figure 3B
+## Extract only a group of cells with a specific CDR3
+data <- as.data.frame(as.matrix(seurat0.8@meta.data))
+data2 <- as.data.frame(as.matrix(seurat0.8@active.ident))
+data <- mutate(data,data2)
+data %>% separate(CTaa,c("TRVA.CDR3","TRBV.CDR3"),sep = "_") ->clonotype_3sample
+
+KOM002_ex1 <- subset(clonotype_3sample,TRBV.CDR3=="CASSYGGRGQTEAFF") #DOP1B
+KOM002_ex7 <- subset(clonotype_3sample,TRBV.CDR3=="CASSSSGTIYEQYF")  #DOP1B
+KOM002_ex12 <- subset(clonotype_3sample,TRBV.CDR3=="CASSAEGQASSYNEQFF")  #DOP1B
+KOM002_ex17 <- subset(clonotype_3sample,TRBV.CDR3=="CASSLGGGGTGELFF")  #DOP1B
+KOM002_ex321 <- subset(clonotype_3sample,TRBV.CDR3=="CATSDPAPSGPTDTQYF")
+
+KOM002_ex1_barcode <- KOM002_ex1$barcode 
+KOM002_ex7_barcode <- KOM002_ex7$barcode
+KOM002_ex12_barcode <- KOM002_ex12$barcode
+KOM002_ex17_barcode <- KOM002_ex17$barcode
+KOM002_ex321_barcode <- KOM002_ex321$barcode
+
+KOM002_ex1_tcells <- subset(MPE.combined_label2,cell=c(KOM002_ex1_barcode))
+KOM002_ex7_tcells <- subset(MPE.combined_label2,cell=KOM002_ex7_barcode)
+KOM002_ex12_tcells <- subset(MPE.combined_label2,cell=KOM002_ex12_barcode)
+KOM002_ex17_tcells <- subset(MPE.combined_label2,cell=KOM002_ex17_barcode)
+KOM002_ex321_tcells <- subset(MPE.combined_label2,cell=KOM002_ex321_barcode)
+
+Idents(KOM002_ex1_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex7_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex12_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex17_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex321_tcells) <- 'KOM002_ex'
+
+KOM002_ex1_tcells@meta.data$epitope <- 'ex1_DOP1B'
+KOM002_ex7_tcells@meta.data$epitope <- 'ex7_DOP1B'
+KOM002_ex12_tcells@meta.data$epitope <- 'ex12_DOP1B'
+KOM002_ex17_tcells@meta.data$epitope <- 'ex17_DOP1B'
+KOM002_ex321_tcells@meta.data$epitope <- 'ex321_unknown'
+
+KOM002_not_tcells <- subset(MPE.combined,cell=c(KOM002_ex1_barcode,KOM002_ex7_barcode,KOM002_ex12_barcode,KOM002_ex17_barcode,KOM002_ex321_barcode), invert = TRUE)
+Idents(KOM002_not_tcells) <- 'KOM002_ex'
+KOM002_not_tcells@meta.data$epitope <- 'No'
+
+##Merge a specific group of cells
+ddTex_KOM002_TCR <- merge(KOM002_ex1_tcells,y=c(KOM002_ex7_tcells,KOM002_ex12_tcells,KOM002_ex17_tcells,KOM002_ex321_tcells))
+ddTex_KOM002_all <- merge(KOM002_ex1_tcells,y=c(KOM002_ex7_tcells,KOM002_ex12_tcells,KOM002_ex17_tcells,KOM002_ex321_tcells,KOM002_not_tcells))
+
+Idents(ddTex_KOM002_TCR) <- "epitope"
+DoHeatmap(ddTex_KOM002_TCR,features = c("PDCD1","HAVCR2","TOX","TNFRSF9","LAG3","TIGIT","CTLA4","PRF1","ENTPD1","ITGAE","CD101","TCF7","GZMB","CXCR5","MKI67","CXCL13"),slot = "data",group.by = "epitope",group.colors = c("magenta","blue","skyblue","black","green"))+ scale_fill_gradient2( low = rev(c('#d1e5f0','#67a9cf','#2166ac')), mid = "black", high = rev(c('#b2182b','#ef8a62','#fddbc7')), midpoint = 0,na.value = "white", guide = "colourbar",aesthetics = "fill")
+
+# Figure 3C
+Idents(ddTex_KOM002_all) <- "orig.ident"
+ddTex_KOM002_all <- subset(x = ddTex_KOM002_all, idents =  'KOM002')
+
+## Extract data.frame of cell varcode and gene expression from Seurat object
+df <- data.frame(ddTex_KOM002@assays[["RNA"]]@data) 
+epitope <- ddTex_KOM002@meta.data[["epitope"]] 
+df2 <- rbind(df, epitope) 
+rownames(df2)[nrow(df2)] <- "epitope" 
+
+## Define genes of interest
+x <- "CXCL13"
+
+##Extract genes and clusters of interest
+selected_rows <- df2[c(x, "epitope"), ]
+selected_rows <- df2[c(x, "orig.ident2"), ]
+
+selected_rows2 <- as.data.frame(t(selected_rows))
+
+m.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean , FUN = mean)
+sd.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean , FUN = sd)
+n.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean, length)
+
+se.v <- sd.v[, x] / sqrt(n.v[, x])
+
+## Draws a bar graph of the average value
+b <- barplot(m.v[, x], names.arg = m.v$epitope, ylab = "expression",
+             main = x, ylim = c(0, max(3.5)),cex.main=3,cex.lab=1.6,	cex.axis=1.6,
+             col = c("#6495ED","magenta","blue","skyblue","black","green"), border = c("#6495ED","magenta","blue","skyblue","black","green"), width = 0.6, space = 0.5)
+
+## Draw a bar graph of averages and error bars
+arrows(b, m.v[, x] - se.v, b, m.v[, x] + se.v, code = 3, lwd = 0.5, angle = 90, length = 0.05)
+
+write.csv(selected_rows2, "MPE_CXCL13.csv")
+
+## Mann-Whitney U test
+df <- read.csv("MPE_CXCL13.csv")
+x <- "CXCL13"
+colnames(df)[colnames(df)==x] <- "Cellular_fractions"
+
+Low <- subset(df, epitope == "No")
+High <- subset(df, epitope == c("ex1_DOP1B","ex7_DOP1B","ex12_DOP1B","ex17_DOP1B","ex321_unknown"))
+
+## Run the Mann-Whitney U test on the variables
+mwu_result <- wilcox.test(Low$Cellular_fractions, High$Cellular_fractions)
+
+# Figure 3D
+Idents(ddTex_KOM002_all) <- "orig.ident"
+ddTex_KOM002_all <- subset(x = ddTex_KOM002_all, idents =  'KOM002')
+
+## GSEA
+DefaultAssay(ddTex_KOM002_all) <- "RNA"   
+Idents(ddTex_KOM002_all) <- "epitope"
+result <- FindMarkers(ddTex_KOM002_all, ident.1 = c("ex1_DOP1B","ex7_DOP1B","ex12_DOP1B","ex17_DOP1B","ex321_unknown"), ident.2 = "No", min.pct = 0.1, logfc.threshold = 0.01,verbose = FALSE)
+head(result, n = 15,)
+
+## Volcano plot
+EnhancedVolcano(result,
+                      lab = rownames(result),
+                      x = "avg_log2FC",
+                      y = "p_val_adj",
+                      xlab = bquote(~Log[2]~ 'fold change'),
+                      ylab = bquote(~Log[10]~ 'FDR'),
+                      pCutoff = 0.01,
+                      FCcutoff = 0.5, 
+                      pointSize = 3,
+                      labSize = 5.0,
+                      colAlpha = 3/5,
+                      legendLabSize = 12,
+                      legendIconSize = 4.0,
+                      legendPosition = 'top',
+                      drawConnectors = T,
+                      max.overlaps = 15,
+                      directionConnectors = "both",
+                      widthConnectors = 0.75,
+                      colConnectors = 'black')
+
+# Figure 3E
+## Enrichment analysis
+msigdbr_df <- msigdbr(species = "Homo sapiens",category = "H") #Hallmark
+msigdbr_df2 <- msigdbr(species = "Homo sapiens",category = "C5", subcategory = "GO:BP")
+
+fgsea_sets<- msigdbr_df %>% split(x = .$gene_symbol, f = .$gs_name)
+fgsea_sets2<- msigdbr_df2 %>% split(x = .$gene_symbol, f = .$gs_name)
+
+ranks <- result$avg_log2FC
+names(ranks) <- rownames(result)
+head(ranks)
+barplot(sort(ranks, decreasing = T))
+
+fgseaRes <- fgsea(pathways = c(fgsea_sets,fgsea_sets2), 
+                  stats = ranks,
+                  minSize=10,
+                  maxSize=500,
+                  nPermSimple = 10000,
+                  nproc=1)
+
+fgseaRes %>% 
+  arrange(desc(abs(NES))) %>% 
+  top_n(10, -padj)
+head(fgseaRes[order(pval), ])
+
+topUp <- fgseaRes %>% 
+  filter(ES > 0) %>% 
+  top_n(10, wt=-padj)
+topDown <- fgseaRes %>% 
+  filter(ES < 0) %>% 
+  top_n(10, wt=-padj)
+topPathways <- bind_rows(topUp, topDown) %>% 
+  arrange(-ES)
+plotGseaTable(fgsea_sets[topPathways$pathway], 
+              ranks, 
+              fgseaRes, 
+              gseaParam = 0.5)
+
+fgseaResTidy <- fgseaRes %>%
+  as_tibble() %>%
+  arrange(desc(NES))
+
+fgseaResTidy %>% 
+  dplyr::select(-leadingEdge, -ES, -nMoreExtreme) %>% 
+  arrange(padj) %>% 
+  head()
+
+ggplot(fgseaResTidy %>% filter(padj < 0.01) %>% head(n= 20), aes(reorder(pathway, NES), NES)) +
+  geom_col(aes(fill= NES < 7.5)) +
+  coord_flip() +
+  labs(x="Pathway", y="Normalized Enrichment Score") + 
+  theme_minimal()
