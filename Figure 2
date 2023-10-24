@@ -1,6 +1,9 @@
 library(Seurat)
 library(drc)
 
+# clean environment
+rm(list = ls())  
+
 #Figure 2B
 ##ex1
 ex1_EC50 <- read.csv("ex1_EC50.csv",header=T, fileEncoding="UTF-8-BOM")
