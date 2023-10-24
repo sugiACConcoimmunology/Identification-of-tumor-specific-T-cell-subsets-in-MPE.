@@ -15,3 +15,35 @@ dfIchi010 <- Read10X(data.dir = "Ichi010_filtered_feature_bc_matrix")
 dfLK084 <- Read10X(data.dir = "filtered_feature_bc_matrix")
 dfMchu003 <- Read10X(data.dir = "Mchu003_filtered_feature_bc_matrix")
 dfLK006 <- Read10X(data.dir = "filtered_feature_bc_matrix")
+
+# Calculate TRBV abundances on the raw counts before creating a Seurat object
+KOM002_TRB.index <- grep(pattern = "^TRB", x = rownames(dfKOM002), value = F) 
+LK208_TRB.index <- grep(pattern = "^TRB", x = rownames(dfLK208), value = F) 
+LK084_TRB.index <- grep(pattern = "^TRB", x = rownames(dfLK084), value = F)
+Ichi010_TRB.index <- grep(pattern = "^TRB", x = rownames(dfIchi010), value = F)
+Mchu003_TRB.index <- grep(pattern = "^TRB", x = rownames(dfMchu003), value = F) 
+LK006_TRB.index <- grep(pattern = "^TRB", x = rownames(dfLK006), value = F) 
+# Select row indices and not TRBV names 
+# Remove TRBV from count.data
+dfKOM002 <- dfKOM002[-KOM002_TRB.index, ]
+dfLK208 <- dfLK208[-LK208_TRB.index, ]
+dfLK084 <- dfLK084[-LK084_TRB.index, ]
+dfIchi010 <- dfIchi010[-Ichi010_TRB.index, ]
+dfMchu003 <- dfMchu003[-Mchu003_TRB.index, ]
+dfLK006 <- dfLK006[-LK006_TRB.index, ]
+# Calculate TRAV abundances on the raw counts before creating a Seurat object
+KOM002_TRA.index <- grep(pattern = "^TRA", x = rownames(dfKOM002), value = F) 
+LK208_TRA.index <- grep(pattern = "^TRA", x = rownames(dfLK208), value = F) 
+LK084_TRA.index <- grep(pattern = "^TRA", x = rownames(dfLK084), value = F) 
+Ichi010_TRA.index <- grep(pattern = "^TRA", x = rownames(dfIchi010), value = F)
+Mchu003_TRA.index <- grep(pattern = "^TRA", x = rownames(dfMchu003), value = F) 
+LK006_TRA.index <- grep(pattern = "^TRA", x = rownames(dfLK006), value = F) 
+# Select row indices and not TRAV names 
+# Remove TRAV from count.data
+dfKOM002 <- dfKOM002[-KOM002_TRA.index, ]
+dfLK208 <- dfLK208[-LK208_TRA.index, ]
+dfLK084 <- dfLK084[-LK084_TRA.index, ]
+dfIchi010 <- dfIchi010[-Ichi010_TRA.index, ]
+dfMchu003 <- dfMchu003[-Mchu003_TRA.index, ]
+dfLK006 <- dfLK006[-LK006_TRA.index, ]
+
