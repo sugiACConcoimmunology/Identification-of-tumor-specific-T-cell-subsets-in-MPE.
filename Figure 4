@@ -20,3 +20,33 @@ DimPlot(bulk.combined_label, reduction = "umap" ,label.box = TRUE, label = TRUE,
         ,cols = c("skyblue","yellowgreen","gold","seagreen","orange","green","khaki","turquoise","magenta","pink","purple","red","cyan")) 
 
 # Figure 4B
+color <- c("CAVEDVPVNDYKLSF_CAISAEGTYEQYF"="gold","NA_CAISAEGTYEQYF"="gold","CAPPEAGANNLFF;CALSDPEESGYALNF_CASSSNEKLFF"="yellow","NA_CASSSNEKLFF"="yellow",
+           "CAVKDNNARLMF_CSATGGGENNGYTF"="chocolate","CVVTFTGGGNKLTF_CASRGGETQYF"="yellowgreen","NA_CASRGGETQYF"="yellowgreen","CAEIPWGGSQGNLIF_CASSRDDREYF"="cyan","CAVDDGGATNKLIF_CASSTRDRGTYEQYF"="purple","NA_CASSTRDRGTYEQYF"="purple",
+           "CAMKTDSWGKFQF_CASSDPGQDVNEQFF"="red","CATYPGKSSGDKLTF_CASSLRASNEQFF"="darkcyan","NA_CASSLRASNEQFF"="darkcyan","CALSRGATNKLIF_CASSQGYGGKLFF"="coral",
+           "CAVQGGNNARLMF_CASSYGGRGQTEAFF"="magenta","NA_CASSYGGRGQTEAFF"="magenta","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF"="blue","NA_CASSSSGTIYEQYF"="blue",
+           "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF"="black","CAVRRDYKLSF_CATSDPAPSGPTDTQYF"="green","CAEILGGYQKVTF_CASSAEGQASSYNEQFF"="skyblue","NA_CASSAEGQASSYNEQFF"="skyblue")
+
+seurat_bulk<- highlightClonotypes(seurat_bulk, 
+                                 cloneCall= "aa", 
+                                 sequence = c("CAVEDVPVNDYKLSF_CAISAEGTYEQYF","NA_CAISAEGTYEQYF","CAPPEAGANNLFF;CALSDPEESGYALNF_CASSSNEKLFF","NA_CASSSNEKLFF",
+                                              "CAVKDNNARLMF_CSATGGGENNGYTF","CVVTFTGGGNKLTF_CASRGGETQYF","NA_CASRGGETQYF","CAEIPWGGSQGNLIF_CASSRDDREYF","CAVDDGGATNKLIF_CASSTRDRGTYEQYF","NA_CASSTRDRGTYEQYF",
+                                              "CAMKTDSWGKFQF_CASSDPGQDVNEQFF","CATYPGKSSGDKLTF_CASSLRASNEQFF","NA_CASSLRASNEQFF","CALSRGATNKLIF_CASSQGYGGKLFF",
+                                              "CAVQGGNNARLMF_CASSYGGRGQTEAFF","NA_CASSYGGRGQTEAFF","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF","NA_CASSSSGTIYEQYF",
+                                              "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF","CAVRRDYKLSF_CATSDPAPSGPTDTQYF","CAEILGGYQKVTF_CASSAEGQASSYNEQFF","NA_CASSAEGQASSYNEQFF"))
+
+DimPlot(seurat_bulk, group.by = "highlight",cols = color, pt.size = 4,na.value="lightgrey", order = TRUE,split.by = "sample_name")  +
+  scale_colour_manual(values = color,na.value="lightgrey",
+                      labels = c("CAVEDVPVNDYKLSF_CAISAEGTYEQYF"="TIL_Pt1-ex8(KK-LC-1)","NA_CAISAEGTYEQYF"="TIL_Pt1-ex8(KK-LC-1)","CAPPEAGANNLFF;CALSDPEESGYALNF_CASSSNEKLFF"="TIL_Pt1-ex15(KK-LC-1)","NA_CASSSNEKLFF"="TIL_Pt1-ex15(KK-LC-1)",
+                                 "CAVKDNNARLMF_CSATGGGENNGYTF"="TIL_Pt1-ex6(SORL1)","CVVTFTGGGNKLTF_CASRGGETQYF"="TIL_Pt1-ex9(SORL1)","NA_CASRGGETQYF"="TIL_Pt1-ex9(SORL1)","CAEIPWGGSQGNLIF_CASSRDDREYF"="TIL_Pt2-ex8(KK-LC-1)","CAVDDGGATNKLIF_CASSTRDRGTYEQYF"="TIL_Pt2-ex9(KK-LC-1)","NA_CASSTRDRGTYEQYF"="TIL_Pt2-ex9(KK-LC-1)",
+                                 "CAMKTDSWGKFQF_CASSDPGQDVNEQFF"="TIL_Pt2-ex12(JAGN1)","CATYPGKSSGDKLTF_CASSLRASNEQFF"="TIL_Pt3-ex2(AKT2)","NA_CASSLRASNEQFF"="TIL_Pt3-ex2(AKT2)","CALSRGATNKLIF_CASSQGYGGKLFF"="TIL_Pt3-ex11(ITGB5)",
+                                 "CAVQGGNNARLMF_CASSYGGRGQTEAFF"="MPE_Pt1-ex1(DOP1B)","NA_CASSYGGRGQTEAFF"="MPE_Pt1-ex1(DOP1B)","CAVQAGMDSNYQLIW_CASSSSGTIYEQYF"="MPE_Pt1-ex7(DOP1B)","NA_CASSSSGTIYEQYF"="MPE_Pt1-ex7(DOP1B)",
+                                 "CAVRDTGRRALTF;CAVRDIGSGNTPLVF_CASSLGGGGTGELFF"="MPE_Pt1-ex17(DOP1B)","CAEILGGYQKVTF_CASSAEGQASSYNEQFF"="MPE_Pt1-ex12(DOP1B)","NA_CASSAEGQASSYNEQFF"="MPE_Pt1-ex12(DOP1B)","CAVRRDYKLSF_CATSDPAPSGPTDTQYF"="MPE_Pt1-ex321(unknown)"))
+
+# Figure 4C
+C6_ex <- subset(bulk.combined_label,idents = 'C6-PDCD1')
+VlnPlot(C6_ex,features=c("PDCD1","HAVCR2","TOX","TNFRSF9","LAG3","TIGIT","CTLA4","PRF1","ENTPD1","ITGAE","CXCL13"),split.by = "orig.ident",stack = T,flip = T,assay = "RNA"
+        ,cols = c("coral","darkkhaki","darkgreen","blue","orange","gold"))
+
+
+
+
