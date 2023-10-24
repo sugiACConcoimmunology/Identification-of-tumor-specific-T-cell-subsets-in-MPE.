@@ -47,3 +47,128 @@ dfIchi010 <- dfIchi010[-Ichi010_TRA.index, ]
 dfMchu003 <- dfMchu003[-Mchu003_TRA.index, ]
 dfLK006 <- dfLK006[-LK006_TRA.index, ]
 
+# Create Seurat object
+ddIchi010 <- CreateSeuratObject(counts = dfIchi010,
+                                project = "Ichi010",
+                                min.cells = 3, 
+                                min.features = 200, 
+                                row.names = 1)
+ddKOM002 <- CreateSeuratObject(counts = dfKOM002,
+                               project = "KOM002",
+                               min.cells = 3, 
+                               min.features = 200, 
+                               row.names = 1)
+ddLK208 <- CreateSeuratObject(counts = dfLK208,
+                              project = "LK208",
+                              min.cells = 3, 
+                              min.features = 200, 
+                              row.names = 1)
+ddLK084 <- CreateSeuratObject(counts = dfLK084, 
+                              project = "LK084",
+                              min.cells = 3, 
+                              min.features = 200, 
+                              row.names = 1) 
+ddMchu003 <- CreateSeuratObject(counts = dfMchu003, 
+                                project = "Mchu003",
+                                min.cells = 3, 
+                                min.features = 200, 
+                                row.names = 1) 
+ddLK006 <- CreateSeuratObject(counts = dfLK006,
+                              project = "LK006",
+                              min.cells = 3, 
+                              min.features = 200, 
+                              row.names = 1)
+
+ddIchi010
+colnames(x=ddIchi010[[]]) 
+head(x=ddIchi010[[]]) 
+ddIchi010[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddIchi010)) 
+names(x=ddIchi010) 
+ddIchi010[["RNA"]] 
+ddIchi010[["percent.mt"]] <- PercentageFeatureSet(ddIchi010, pattern = "^MT-") 
+VlnPlot(ddIchi010, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddIchi010, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddIchi010, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2 
+
+ddKOM002
+colnames(x=ddKOM002[[]]) 
+head(x=ddKOM002[[]]) 
+ddKOM002[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddKOM002)) 
+names(x=ddKOM002) 
+ddKOM002[["RNA"]] 
+ddKOM002[["percent.mt"]] <- PercentageFeatureSet(ddKOM002, pattern = "^MT-") 
+VlnPlot(ddKOM002, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddKOM002, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddKOM002, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2  
+
+ddLK208
+colnames(x=ddLK208[[]]) 
+head(x=ddLK208[[]]) 
+ddLK208[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddLK208)) 
+names(x=ddLK208) 
+ddLK208[["RNA"]] 
+ddLK208[["percent.mt"]] <- PercentageFeatureSet(ddLK208, pattern = "^MT-") 
+VlnPlot(ddLK208, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddLK208, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddLK208, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2  
+
+ddLK084
+colnames(x=ddLK084[[]]) 
+head(x=ddLK084[[]]) 
+ddLK084[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddLK084)) 
+names(x=ddLK084) 
+ddLK084[["RNA"]] 
+ddLK084[["percent.mt"]] <- PercentageFeatureSet(ddLK084, pattern = "^MT-") 
+VlnPlot(ddLK084, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddLK084, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddLK084, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2 
+
+ddMchu003
+colnames(x=ddMchu003[[]]) 
+head(x=ddMchu003[[]]) 
+ddMchu003[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddMchu003)) 
+names(x=ddMchu003) 
+ddMchu003[["RNA"]] 
+ddMchu003[["percent.mt"]] <- PercentageFeatureSet(ddMchu003, pattern = "^MT-") 
+VlnPlot(ddMchu003, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddMchu003, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddMchu003, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2 
+
+ddLK006
+colnames(x=ddLK006[[]]) 
+head(x=ddLK006[[]]) 
+ddLK006[["RNA"]]@counts[1:5,1:5] 
+head(x=rownames(x=ddLK006)) 
+names(x=ddLK006) 
+ddLK006[["RNA"]] 
+ddLK006[["percent.mt"]] <- PercentageFeatureSet(ddLK006, pattern = "^MT-") 
+VlnPlot(ddLK006, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3) 
+plot1 <- FeatureScatter(ddLK006, feature1 = "nCount_RNA", feature2 = "percent.mt") 
+plot2 <- FeatureScatter(ddLK006, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") 
+plot1 + plot2 
+
+ddKOM002 <- subset(ddKOM002, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10) 
+ddLK208 <- subset(ddLK208, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
+ddLK084 <- subset(ddLK084, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10) 
+ddIchi010 <- subset(ddIchi010, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10) 
+ddMchu003 <- subset(ddMchu003, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10) 
+ddLK006 <- subset(ddLK006, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
+
+
+ddbulk <- merge(ddKOM002,y=c(ddLK208,ddLK084,ddIchi010,ddMchu003,ddLK006),add.cell.ids=c("KOM002_T","LK208_T","LK084_T","Ichi010_T","Mchu003_T","LK006_T"))
+head(colnames(ddbulk))
+tail(colnames(ddbulk))
+unique(sapply(X = strsplit(colnames(ddbulk), split = "_"), FUN = "[", 1))
+table(ddbulk$orig.ident)
+ddbulk
+
