@@ -19,4 +19,4 @@ seurat0.8 <- combineExpression(combined_MPE, MPE.combined_label2,
 DimPlot(seurat0.8, group.by = "cloneType",pt.size = 1.5) 
 
 #<Save the object at this point so that it can easily be loaded back>
-saveRDS(seurat0.8, file = "G:/SingleCell/singlecellfile/MPE-CD4_seurat0.8.rds")
+saveRDS(seurat0.8, file = "G:/SingleCell/singlecellfile/MPE_seurat0.8.rds")
