@@ -205,6 +205,25 @@ bulk.combined_label <- RenameIdents(bulk.combined , new.cluster.ids)
 saveRDS(bulk.combined, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined.rds")
 saveRDS(bulk.combined_label, file = "G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
 
-# 
+# scTCR-seq
+SKOM002 <- read.csv("/SingleCell/KOM002/KOM002_vdj2/outs/filtered_contig_annotations.csv")
+SLK208 <- read.csv("/SingleCell/LK208/LK208_vdj_outs/filtered_contig_annotations.csv")
+SLK093 <- read.csv("/SingleCell/LK093/vdj_t/filtered_contig_annotations.csv")
+SLK084 <- read.csv("/SingleCell/LK084/VDJ/filtered_contig_annotations.csv")
+SIchi010 <- read.csv("/SingleCell/Ichi010/Ichi010filtered_contig_annotations.csv")
+SMchu003 <- read.csv("/SingleCell/Mchu003/Mchu003filtered_contig_annotations.csv")
+SLK006 <- read.csv("/SingleCell/LK006/LK006_outs/filtered_contig_annotations.csv")
+contig_list_bulk <- list(SKOM002,SLK208,SLK084,SIchi010,SMchu003,SLK006)
+head(contig_list_bulk[[5]])
 
+combined_bulk <- combineTCR(contig_list_bulk,samples = c("KOM002","LK208","LK084","Ichi010","Mchu003","LK006"),ID = c("T","T","T","T","T","T"), cells = "T-AB")
+
+seurat_bulk <- combineExpression(combined_bulk, bulk.combined_label, 
+                                 cloneCall="gene", proportion = FALSE, 
+                                 cloneTypes=c(Single=1, Small=5, Medium=20, Large=100, Hyperexpanded=500))
+
+DimPlot(seurat_bulk, group.by = "cloneType") 
+
+#<Save the object at this point so that it can easily be loaded back>
+saveRDS(seurat_bulk, file = "G:/SingleCell/singlecellfile/TILvsMPE_seurat_bulk.rds")
 
