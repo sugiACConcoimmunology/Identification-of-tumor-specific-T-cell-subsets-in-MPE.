@@ -5,6 +5,7 @@ library(readr)
 library(tidyr) 
 library(ggplot2) 
 library(tidyverse)
+library(data.table)
 library(SeuratWrappers)
 library(Signac)
 library(monocle3)
@@ -19,6 +20,7 @@ rm(list = ls())
 # load data
 MPE.combined_label <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label.rds")
 MPE.combined_label2 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
+seurat0.8 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_seurat0.8.rds")
 
 # Figure 1B
 DimPlot(MPE.combined_label, reduction = "umap" , label = TRUE, pt.size = 1.8, label.size = 5,repel = TRUE,
@@ -27,6 +29,13 @@ DimPlot(MPE.combined_label, reduction = "umap" , label = TRUE, pt.size = 1.8, la
 # Figure 1C
 DimPlot(MPE.combined_label2,label = F, reduction = "umap" , split.by = "orig.ident",pt.size = 1.5,ncol = 2,
         cols = c("skyblue","gold","yellowgreen","coral","green","khaki","magenta","cyan","red","pink"))
+
+# Figure 1D
+data_to_write_out <- as.data.frame(as.matrix(seurat0.8@meta.data))
+data_to_write_out2 <- as.data.frame(as.matrix(seurat0.8@active.ident))
+data_to_write_out <- mutate(data_to_write_out,data_to_write_out2)
+data_to_write_out %>% separate(CTaa,c("TRVA.CDR3","TRBV.CDR3"),sep = "_") ->data_to_write_out
+fwrite(x = data_to_write_out, file = "MPE.csv")
 
 # Figure 1E
 MPE.averages <- AverageExpression(MPE.combined_label2)
@@ -73,3 +82,24 @@ plot_cells(cds,
            cell_size = 1.5)
 
 # Figure 1G
+Idents(seurat0.8) <- "orig.ident"
+seurat0.8_KOM002 <- subset(x = seurat0.8, idents =  'KOM002')
+seurat0.8_LK006 <- subset(x = seurat0.8, idents =  'LK006')
+seurat0.8_LK208 <- subset(x = seurat0.8, idents =  'LK208')
+Idents(seurat0.8_KOM002) <- "seurat_clusters"
+Idents(seurat0.8_LK006) <- "seurat_clusters"
+Idents(seurat0.8_LK208) <- "seurat_clusters"
+
+occupiedscRepertoire(seurat0.8_KOM002, x.axis = "ident",label = F)
+occupiedscRepertoire(seurat0.8_LK006, x.axis = "ident",label = F)
+occupiedscRepertoire(seurat0.8_LK208, x.axis = "ident",label = F)
+
+combined2 <- expression2List(seurat0.8_KOM002, 
+                             split.by = "ident")
+combined2 <- expression2List(seurat0.8_LK006, 
+                             split.by = "ident")
+combined2 <- expression2List(seurat0.8_LK208, 
+                             split.by = "ident")
+clonalOverlap(combined2, 
+              cloneCall="aa", 
+              method="overlap")
