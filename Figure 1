@@ -1,0 +1,75 @@
+library(Seurat) 
+suppressMessages(library(scRepertoire))
+library(dplyr) 
+library(readr) 
+library(tidyr) 
+library(ggplot2) 
+library(tidyverse)
+library(SeuratWrappers)
+library(Signac)
+library(monocle3)
+library(patchwork)
+library(scRNAseq)
+
+
+
+# clean environment
+rm(list = ls())  
+
+# load data
+MPE.combined_label <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label.rds")
+MPE.combined_label2 <- readRDS("G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
+
+# Figure 1B
+DimPlot(MPE.combined_label, reduction = "umap" , label = TRUE, pt.size = 1.8, label.size = 5,repel = TRUE,
+        label.box = TRUE,cols = c("skyblue","gold","yellowgreen","coral","green","khaki","magenta","cyan","red","pink")) 
+
+# Figure 1C
+DimPlot(MPE.combined_label2,label = F, reduction = "umap" , split.by = "orig.ident",pt.size = 1.5,ncol = 2,
+        cols = c("skyblue","gold","yellowgreen","coral","green","khaki","magenta","cyan","red","pink"))
+
+# Figure 1E
+MPE.averages <- AverageExpression(MPE.combined_label2)
+head(MPE.averages[["RNA"]][, 1:5])
+orig.levels <- levels(MPE.combined_label2)
+Idents(MPE.combined_label2) <- gsub(pattern = " ", replacement = "_", x = Idents(MPE.combined_label2))
+orig.levels <- gsub(pattern = " ", replacement = "_", x = orig.levels)
+levels(MPE.combined_label2) <- orig.levels
+MPE.averages <- AverageExpression(MPE.combined_label2, return.seurat = TRUE)
+MPE.averages
+
+MPE <- c("LEF1","IL7R","SELL","CCR7","TCF7","GZMK","GZMB","PRF1","CX3CR1","ZNF683","IFNG","TNF","KLRB1","GNLY","PDCD1","HAVCR2","TNFRSF9","LAG3","TIGIT","CTLA4","ENTPD1","ITGAE","CXCL13","MKI67")
+
+DoHeatmap(MPE.averages, features = c(MPE2),slot = "scale.data" ,size = 4,draw.lines = FALSE) + 
+  scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 10, name = "RdBu")))
+
+# Figure 1F
+DefaultAssay(MPE.combined_label2) <- "RNA"
+cds <- as.cell_data_set(MPE.combined_label2)
+cds <- cluster_cells(cds = cds, reduction_method = "UMAP")
+
+cds <- learn_graph(cds, use_partition = TRUE)
+plot_cells(cds, label_groups_by_cluster = FALSE, label_leaves = FALSE, label_branch_points = FALSE)
+
+
+plot_cells(cds,
+           color_cells_by = "cluster",
+           label_cell_groups=FALSE,
+           label_leaves=TRUE,
+           label_branch_points=TRUE,
+           graph_label_size=2,
+           cell_size = 1)
+cds <- order_cells(cds)
+plot_cells(cds,
+           color_cells_by = "pseudotime",
+           label_cell_groups=F,
+           label_leaves=F,
+           label_roots = F,
+           label_branch_points=F,
+           graph_label_size=4,
+           trajectory_graph_color = "green",
+           trajectory_graph_segment_size = 2,
+           show_trajectory_graph = TRUE,
+           cell_size = 1.5)
+
+# Figure 1G
