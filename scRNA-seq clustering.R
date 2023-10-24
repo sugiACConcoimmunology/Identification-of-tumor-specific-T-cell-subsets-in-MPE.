@@ -110,7 +110,7 @@ names(new.cluster.ids2) <- levels(MPE.combined)
 MPE.combined_label2 <- RenameIdents(MPE.combined , new.cluster.ids2)
 
 #<Save the object at this point so that it can easily be loaded back>
-saveRDS(MPE.combined, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined.rds")
-saveRDS(MPE.combined_label, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label.rds")
-saveRDS(MPE.combined_label2, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
+saveRDS(MPE.combined, file = "G:/SingleCell/singlecellfile/MPE_MPE.combined.rds")
+saveRDS(MPE.combined_label, file = "G:/SingleCell/singlecellfile/MPE_MPE.combined_label.rds")
+saveRDS(MPE.combined_label2, file = "G:/SingleCell/singlecellfile/MPE_MPE.combined_label2.rds")
 
