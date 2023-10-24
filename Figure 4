@@ -14,3 +14,9 @@ rm(list = ls())
 # load data
 bulk.combined_label <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
 seurat_bulk <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_seurat_bulk.rds")
+
+# Figure 4A
+DimPlot(bulk.combined_label, reduction = "umap" ,label.box = TRUE, label = TRUE, repel = TRUE,pt.size = 1, label.size = 4.5
+        ,cols = c("skyblue","yellowgreen","gold","seagreen","orange","green","khaki","turquoise","magenta","pink","purple","red","cyan")) 
+
+# Figure 4B
