@@ -8,5 +8,8 @@ library(tidyverse)
 suppressMessages(library(scRepertoire))
 library(SeuratData)
 
+# clean environment
+rm(list = ls())  
 
+# load data
 bulk.combined_label <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
