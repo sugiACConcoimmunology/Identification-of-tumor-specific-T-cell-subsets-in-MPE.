@@ -48,6 +48,7 @@ ddKOM002 <- subset(ddKOM002, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 &
 ddLK208 <- subset(ddLK208, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
 ddLK006 <- subset(ddLK006, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
 
+# Merge cases and remove batch effects
 ddMPE <- merge(ddKOM002,y=c(ddLK208,ddLK006),add.cell.ids=c("KOM002_T","LK208_T","LK006_T"))
 head(colnames(ddMPE))
 tail(colnames(ddMPE))
