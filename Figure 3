@@ -15,4 +15,7 @@ library(goseq)
 library(geneLenDataBase)
 library(org.Hs.eg.db)
 
-# Data road
+# clean environment
+rm(list = ls())  
+
+# load data
