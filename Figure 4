@@ -1,0 +1,2 @@
+
+bulk.combined_label <- readRDS("G:/SingleCell/singlecellfile/TILvsMPE_bulk.combined_label.rds")
