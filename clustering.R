@@ -71,4 +71,45 @@ MPE.combined <- RunPCA(MPE.combined, npcs = 30, verbose = FALSE)
 MPE.combined <- RunUMAP(MPE.combined, reduction = "pca", dims = 1:30)
 MPE.combined <- FindNeighbors(MPE.combined, reduction = "pca", dims = 1:30)
 MPE.combined <- FindClusters(MPE.combined, resolution = 0.4)
-DimPlot(MPE.combined, reduction = "umap")
+DimPlot(MPE.combined, reduction = "umap" , label = TRUE,pt.size = 1.5, label.size = 7) 
+DimPlot(MPE.combined, reduction = "umap" , label.size = 3,split.by = "orig.ident")
+
+cluster.all.markers <- FindAllMarkers(MPE.combined,only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+Top10_MPE <- cluster.all.markers %>% group_by(cluster) %>% top_n(n=10,wt=avg_log2FC)
+DoHeatmap(MPE.combined,features = Top10_MPE$gene)
+
+# Averaged feature expression by identity class
+MPE.averages <- AverageExpression(MPE.combined)
+head(MPE.averages[["RNA"]][, 1:5])
+orig.levels <- levels(MPE.combined)
+Idents(MPE.combined) <- gsub(pattern = " ", replacement = "_", x = Idents(MPE.combined))
+orig.levels <- gsub(pattern = " ", replacement = "_", x = orig.levels)
+levels(MPE.combined) <- orig.levels
+MPE.averages <- AverageExpression(MPE.combined, return.seurat = TRUE)
+MPE.averages
+
+# Naming representative marker
+Tex <- c("PDCD1","TIGIT","HAVCR2","LAG3","CTLA4","ENTPD1","ITGAE","ICOS","TNFRSF9")
+Tact <- c("CD38","CD69","ICOS","TNFRSF9","HLA-DRA","CD40LG")
+Tef <- c("GZMA","GZMB","GZMH","GZMK","GZMM","PRF1","NKG7","GNLY","IFNG","FASLG","TNF","IL17A","CD69","FGFBP2","KLRD1","S1PR1")
+Tn <- c("SELL","CCR7","IL7R","CD28","FAS","ITGAL","S1PR1","LEF1","SATB1")
+Tnkgd  <- c("MKI67","TCF7","TOX","TRGV9","TRDV2","KLRB1","KLRC3","XCL2","NKG7","NCR1")
+
+DoHeatmap(MPE.averages, features = c(Tn,Tnkgd),slot = "scale.data" ,size = 4,draw.lines = FALSE) + 
+  scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 10, name = "RdBu")))
+DoHeatmap(MPE.averages, features = c(Tex4,Tact,Tef,"MKI67"),slot = "scale.data" ,size = 4,draw.lines = FALSE) + 
+  scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(n = 10, name = "RdBu")))
+
+# Cluster labeling
+new.cluster.ids <- c("C4-CX3CR1","C2-IL7R","C1-LEF1","C5-PDCD1","C3-RPL13","C6-ZNF683","C8-LMNA","C10-S100A9","C7-MKI67","C9-IFIT2")
+new.cluster.ids2 <- c("C4","C2","C1","C5","C3","C6","C8","C10","C7","C9")
+names(new.cluster.ids) <- levels(MPE.combined)
+MPE.combined_label <- RenameIdents(MPE.combined , new.cluster.ids)
+names(new.cluster.ids2) <- levels(MPE.combined)
+MPE.combined_label2 <- RenameIdents(MPE.combined , new.cluster.ids2)
+
+#<Save the object at this point so that it can easily be loaded back>
+saveRDS(MPE.combined, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined.rds")
+saveRDS(MPE.combined_label, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label.rds")
+saveRDS(MPE.combined_label2, file = "G:/SingleCell/singlecellfile/MPE-CD4_MPE.combined_label2.rds")
+
