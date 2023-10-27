@@ -47,6 +47,89 @@ C6_ex <- subset(bulk.combined_label,idents = 'C6-PDCD1')
 VlnPlot(C6_ex,features=c("PDCD1","HAVCR2","TOX","TNFRSF9","LAG3","TIGIT","CTLA4","PRF1","ENTPD1","ITGAE","CXCL13"),split.by = "orig.ident",stack = T,flip = T,assay = "RNA"
         ,cols = c("coral","darkkhaki","darkgreen","blue","orange","gold"))
 
+# Figure 4D
+data <- as.data.frame(as.matrix(seurat_bulk@meta.data))
+data2 <- as.data.frame(as.matrix(seurat_bulk@active.ident))
+data <- mutate(data,data2)
+data %>% separate(CTaa,c("TRVA.CDR3","TRBV.CDR3"),sep = "_") ->clonotype_3sample
 
+KOM002_ex1 <- subset(clonotype_3sample,TRBV.CDR3=="CASSYGGRGQTEAFF") #DOP1B
+KOM002_ex7 <- subset(clonotype_3sample,TRBV.CDR3=="CASSSSGTIYEQYF")  #DOP1B
+KOM002_ex12 <- subset(clonotype_3sample,TRBV.CDR3=="CASSAEGQASSYNEQFF")  #DOP1B
+KOM002_ex17 <- subset(clonotype_3sample,TRBV.CDR3=="CASSLGGGGTGELFF")  #DOP1B
+KOM002_ex321 <- subset(clonotype_3sample,TRBV.CDR3=="CATSDPAPSGPTDTQYF") 
+Ichi010_V10.3 <- subset(clonotype_3sample,TRBV.CDR3=="CAISAEGTYEQYF") #KK-LC-1
+Ichi010_ex19.1 <- subset(clonotype_3sample,TRBV.CDR3=="CASSSNEKLFF") #KK-LC-1
+Ichi010_V29.1 <- subset(clonotype_3sample,TRBV.CDR3=="CSATGGGENNGYTF") #SOPL1
+Ichi010_V10.2 <- subset(clonotype_3sample,TRBV.CDR3=="CASRGGETQYF") #SOPL1
+Mchu003_ex8 <- subset(clonotype_3sample,TRBV.CDR3=="CASSRDDREYF") #KK-LC-1
+Mchu003_ex9 <- subset(clonotype_3sample,TRBV.CDR3=="CASSTRDRGTYEQYF") #KK-LC-1
+Mchu003_ex12 <- subset(clonotype_3sample,TRBV.CDR3=="CASSDPGQDVNEQFF") #JAGN1
+LK084_ex2 <- subset(clonotype_3sample,TRBV.CDR3=="CASSLRASNEQFF") #AKT4
+LK084_ex11 <- subset(clonotype_3sample,TRBV.CDR3=="CASSQGYGGKLFF") #ITGB5
 
+KOM002_ex1_barcode <- KOM002_ex1$barcode 
+KOM002_ex7_barcode <- KOM002_ex7$barcode
+KOM002_ex12_barcode <- KOM002_ex12$barcode
+KOM002_ex17_barcode <- KOM002_ex17$barcode
+KOM002_ex321_barcode <- KOM002_ex321$barcode
+Ichi010_V10.3_barcode <- Ichi010_V10.3$barcode
+Ichi010_ex19.1_barcode <- Ichi010_ex19.1$barcode
+Ichi010_V29.1_barcode <- Ichi010_V29.1$barcode
+Ichi010_V10.2_barcode <- Ichi010_V10.2$barcode
+Mchu003_ex8_barcode <- Mchu003_ex8$barcode
+Mchu003_ex9_barcode <- Mchu003_ex9$barcode
+Mchu003_ex12_barcode <- Mchu003_ex12$barcode
+LK084_ex2_barcode <- LK084_ex2$barcode
+LK084_ex11_barcode <- LK084_ex11$barcode
+
+KOM002_ex1_tcells <- subset(bulk.combined_label,cell=c(KOM002_ex1_barcode))
+KOM002_ex7_tcells <- subset(bulk.combined_label,cell=KOM002_ex7_barcode)
+KOM002_ex12_tcells <- subset(bulk.combined_label,cell=KOM002_ex12_barcode)
+KOM002_ex17_tcells <- subset(bulk.combined_label,cell=KOM002_ex17_barcode)
+KOM002_ex321_tcells <- subset(bulk.combined_label,cell=KOM002_ex321_barcode)
+Ichi010_tcells_KKLC1_ex8 <- subset(bulk.combined_label,cell=c(Ichi010_V10.3_barcode))
+Ichi010_tcells_KKLC1_ex15 <- subset(bulk.combined_label,cell=c(Ichi010_ex19.1_barcode))
+Ichi010_tcells_SORL1_ex6 <- subset(bulk.combined_label,cell=c(Ichi010_V29.1_barcode))
+Ichi010_tcells_SORL1_ex9 <- subset(bulk.combined_label,cell=c(Ichi010_V10.2_barcode))
+Mchu003_tcells_KKLC1_ex8 <- subset(bulk.combined_label,cell=c(Mchu003_ex8_barcode))
+Mchu003_tcells_KKLC1_ex9 <- subset(bulk.combined_label,cell=c(Mchu003_ex9_barcode))
+Mchu003_tcells_JAGN1 <- subset(bulk.combined_label,cell=c(Mchu003_ex12_barcode))
+LK084_tcells_AKT2 <- subset(bulk.combined_label,cell=c(LK084_ex2_barcode))
+LK084_tcells_ITGB5 <- subset(bulk.combined_label,cell=c(LK084_ex11_barcode))
+
+Idents(KOM002_ex1_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex7_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex12_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex17_tcells) <- 'KOM002_ex'
+Idents(KOM002_ex321_tcells) <- 'KOM002_ex'
+Idents(Ichi010_tcells_KKLC1_ex8) <- 'Ichi010_ex'
+Idents(Ichi010_tcells_KKLC1_ex15) <- 'Ichi010_ex'
+Idents(Ichi010_tcells_SORL1_ex6) <- 'Ichi010_ex'
+Idents(Ichi010_tcells_SORL1_ex9) <- 'Ichi010_ex'
+Idents(Mchu003_tcells_KKLC1_ex8) <- 'Mchu003_ex'
+Idents(Mchu003_tcells_KKLC1_ex9) <- 'Mchu003_ex'
+Idents(Mchu003_tcells_JAGN1) <- 'Mchu003_ex'
+Idents(LK084_tcells_AKT2) <- 'LK084_ex'
+Idents(LK084_tcells_ITGB5) <- 'LK084_ex'
+
+KOM002_ex1_tcells@meta.data$epitope <- 'ex1_DOP1B'
+KOM002_ex7_tcells@meta.data$epitope <- 'ex7_DOP1B'
+KOM002_ex12_tcells@meta.data$epitope <- 'ex12_DOP1B'
+KOM002_ex17_tcells@meta.data$epitope <- 'ex17_DOP1B'
+KOM002_ex321_tcells@meta.data$epitope <- 'ex321_unknown'
+Ichi010_tcells_KKLC1_ex8@meta.data$epitope <- 'ex8_KK-LC-1_Pt1'
+Ichi010_tcells_KKLC1_ex15@meta.data$epitope <- 'ex15_KK-LC-1'
+Ichi010_tcells_SORL1_ex6@meta.data$epitope <- 'ex6_SORL1'
+Ichi010_tcells_SORL1_ex9@meta.data$epitope <- 'ex9_SORL1'
+Mchu003_tcells_KKLC1_ex8@meta.data$epitope <- 'ex8_KK-LC-1_Pt2'
+Mchu003_tcells_KKLC1_ex9@meta.data$epitope <- 'ex9_KK-LC-1'
+Mchu003_tcells_JAGN1@meta.data$epitope <- 'ex12_JAGN1'
+LK084_tcells_AKT2@meta.data$epitope <- 'ex2_AKT2'
+LK084_tcells_ITGB5@meta.data$epitope <- 'ex11_ITGB5'
+
+not_tcells <- subset(bulk.combined_label,cell=c(KOM002_ex1_barcode,KOM002_ex7_barcode,KOM002_ex12_barcode,KOM002_ex17_barcode,KOM002_ex321_barcode,
+                                                Ichi010_V10.3_barcode,Ichi010_ex19.1_barcode,Ichi010_V29.1_barcode,Ichi010_V10.2_barcode,
+                                                Mchu003_ex8_barcode,Mchu003_ex9_barcode,Mchu003_ex12_barcode,
+                                                LK084_ex2_barcode,LK084_ex11_barcode), invert = TRUE)
 
