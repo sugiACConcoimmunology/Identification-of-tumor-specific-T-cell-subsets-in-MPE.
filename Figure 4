@@ -135,5 +135,11 @@ not_tcells <- subset(bulk.combined_label,cell=c(KOM002_ex1_barcode,KOM002_ex7_ba
                                                 LK084_ex2_barcode,LK084_ex11_barcode), invert = TRUE)
 not_tcells@meta.data$epitope <- 'No'
 
+##Merge a specific group of cells
+ddTex <- merge(KOM002_ex1_tcells,y=c(KOM002_ex7_tcells,KOM002_ex12_tcells,KOM002_ex17_tcells,KOM002_ex321_tcells,
+                                     Ichi010_tcells_KKLC1_ex8,Ichi010_tcells_KKLC1_ex15,Ichi010_tcells_SORL1_ex6,Ichi010_tcells_SORL1_ex9,
+                                     Mchu003_tcells_KKLC1_ex8,Mchu003_tcells_KKLC1_ex9,Mchu003_tcells_JAGN1,
+                                     LK084_tcells_AKT2,LK084_tcells_ITGB5,not_tcells))
+
 
 
