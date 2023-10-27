@@ -1,0 +1,26 @@
+library(tidyverse)
+library(survival)
+library(survminer)
+library(readr)
+
+rm(list = ls())
+
+df <- read.table("FACSsurvival.csv",
+                 sep=",",
+                 header=TRUE,
+                 na.strings=c(''),
+                 fill=TRUE)
+
+re <- survdiff(Surv(OS.time, OS) ~CXCL13, data = df )
+1 - pchisq(re$chisq, length(re$n) - 1)
+
+fit <- survfit( Surv(OS.time, OS) ~ TP_PS, data = df )
+
+ggsurvplot(fit, data = df,             
+           risk.table = TRUE,       
+           pval = TRUE,             
+           conf.int = TRUE,         
+           xlab = "DAY",
+           ggtheme = theme_light(base_size = 12), 
+           risk.table.y.text.col = TRUE, 
+           risk.table.y.text = FALSE) 
