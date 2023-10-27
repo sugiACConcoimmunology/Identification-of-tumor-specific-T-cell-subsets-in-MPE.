@@ -48,6 +48,7 @@ VlnPlot(C6_ex,features=c("PDCD1","HAVCR2","TOX","TNFRSF9","LAG3","TIGIT","CTLA4"
         ,cols = c("coral","darkkhaki","darkgreen","blue","orange","gold"))
 
 # Figure 4D
+## Extract only a group of cells with a specific CDR3
 data <- as.data.frame(as.matrix(seurat_bulk@meta.data))
 data2 <- as.data.frame(as.matrix(seurat_bulk@active.ident))
 data <- mutate(data,data2)
@@ -132,4 +133,7 @@ not_tcells <- subset(bulk.combined_label,cell=c(KOM002_ex1_barcode,KOM002_ex7_ba
                                                 Ichi010_V10.3_barcode,Ichi010_ex19.1_barcode,Ichi010_V29.1_barcode,Ichi010_V10.2_barcode,
                                                 Mchu003_ex8_barcode,Mchu003_ex9_barcode,Mchu003_ex12_barcode,
                                                 LK084_ex2_barcode,LK084_ex11_barcode), invert = TRUE)
+not_tcells@meta.data$epitope <- 'No'
+
+
 
