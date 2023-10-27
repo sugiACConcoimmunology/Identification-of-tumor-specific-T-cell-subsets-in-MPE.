@@ -135,11 +135,33 @@ not_tcells <- subset(bulk.combined_label,cell=c(KOM002_ex1_barcode,KOM002_ex7_ba
                                                 LK084_ex2_barcode,LK084_ex11_barcode), invert = TRUE)
 not_tcells@meta.data$epitope <- 'No'
 
-##Merge a specific group of cells
+## Merge a specific group of cells
 ddTex <- merge(KOM002_ex1_tcells,y=c(KOM002_ex7_tcells,KOM002_ex12_tcells,KOM002_ex17_tcells,KOM002_ex321_tcells,
                                      Ichi010_tcells_KKLC1_ex8,Ichi010_tcells_KKLC1_ex15,Ichi010_tcells_SORL1_ex6,Ichi010_tcells_SORL1_ex9,
                                      Mchu003_tcells_KKLC1_ex8,Mchu003_tcells_KKLC1_ex9,Mchu003_tcells_JAGN1,
                                      LK084_tcells_AKT2,LK084_tcells_ITGB5,not_tcells))
+## barplot
+df <- data.frame(ddTex@assays[["RNA"]]@data) 
+epitope <- ddTex@meta.data[["epitope"]] 
+df2 <- rbind(df, epitope) 
+rownames(df2)[nrow(df2)] <- "epitope"
+
+x <- "CXCL13"
+selected_rows <- df2[c(x, "epitope"), ]
+selected_rows2 <- as.data.frame(t(selected_rows))
+
+m.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2 , FUN = mean)
+sd.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2 , FUN = sd)
+n.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2, length)
+se.v <- sd.v[, x] / sqrt(n.v[, x])
+
+b <- barplot(m.v[, x], names.arg = m.v$epitope, ylab = "expression",
+             main = x, ylim = c(0, max(6)),cex.main=1,cex.lab=1.6,	cex.axis=1.2,cex.names=0.5, xaxt="n",
+             col = c("#6495ED","magenta","blue","skyblue","black","green","gold","yellow","chocolate","yellowgreen","cyan","purple","red","darkcyan","coral"), 
+             border = c("#6495ED","magenta","blue","skyblue","black","green","gold","yellow","chocolate","yellowgreen","cyan","purple","red","darkcyan","coral"), 
+             width = 0.6, space = 0.5)
+arrows(b, m.v[, x] - se.v, b, m.v[, x] + se.v, code = 3, lwd = 0.5, angle = 90, length = 0.05)
+
 
 
 
