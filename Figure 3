@@ -105,10 +105,9 @@ selected_rows <- df2[c(x, "epitope"), ]
 
 selected_rows2 <- as.data.frame(t(selected_rows))
 
-m.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean , FUN = mean)
-sd.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean , FUN = sd)
-n.v <- aggregate(as.formula(paste(x, "~ epitope")), MPE_mean, length)
-
+m.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2 , FUN = mean)
+sd.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2 , FUN = sd)
+n.v <- aggregate(as.formula(paste(x, "~ epitope")), selected_rows2, length)
 se.v <- sd.v[, x] / sqrt(n.v[, x])
 
 ## Draws a bar graph of the average value
