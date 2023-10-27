@@ -102,7 +102,6 @@ x <- "CXCL13"
 
 ##Extract genes and clusters of interest
 selected_rows <- df2[c(x, "epitope"), ]
-selected_rows <- df2[c(x, "orig.ident2"), ]
 
 selected_rows2 <- as.data.frame(t(selected_rows))
 
